@@ -94,6 +94,39 @@ const createUsernames = accs => {
 createUsernames(accounts);
 console.log(accounts);
 
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.innerHTML = `${balance} EUR`;
+};
+calcDisplayBalance(account1.movements);
+
+const calcDisplaySummaryIn = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}`;
+
+  const outgoing = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(outgoing)}`;
+};
+// FUNCTION TO SHOW SUMMARY
+calcDisplaySummaryIn(account1.movements);
+
+// const calcDisplaySummaryOut = function (movements) {
+//
+// };
+
+// const calcInterest = function (movements) {
+//   const interest = movements.reduce((acc, mov) => acc + mov, 0);
+//   return Math.trunc(interest * 0.12);
+// };
+
+// labelSumOut.innerHTML = accountOut;
+// labelSumInterest.innerHTML = interestAccrued;
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -111,17 +144,30 @@ let gbpToUsd = 1.1;
 
 const movementsUsd = movements.map(mov => Math.trunc(mov * gbpToUsd));
 
-console.log(movementsUsd);
+// console.log(movementsUsd);
 
 const movementsDescriptions = movements.map((mov, i) => {
   `Movement ${i + 1}: You ${mov > 0 ? 'received' : 'paid'} ${Math.abs(mov)}`;
 });
-console.log(movementsDescriptions);
+// console.log(movementsDescriptions);
 
 const deposits = movements.filter(function (mov) {
   return mov > 0;
 });
-console.log('These are the deposits ' + deposits);
+// console.log('These are the deposits ' + deposits);
 
 const withdrawals = movements.filter(mov => mov < 0);
-console.log(withdrawals);
+// console.log(withdrawals);
+
+const balance = movements.reduceRight((acc, cur) => acc + cur, 0);
+
+// console.log(balance);
+
+const max = account2.movements.reduce(function (acc, mov) {
+  if (acc > mov) {
+    return acc;
+  } else {
+    return mov;
+  }
+}, movements[0]);
+// console.log(max);
