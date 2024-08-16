@@ -101,31 +101,50 @@ const calcDisplayBalance = function (movements) {
 };
 calcDisplayBalance(account1.movements);
 
-const calcDisplaySummaryIn = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = `${incomes}`;
 
-  const outgoing = movements
+  const outgoing = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(outgoing)}`;
+
+  const interest = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}`;
 };
 // FUNCTION TO SHOW SUMMARY
-calcDisplaySummaryIn(account1.movements);
+// calcDisplaySummary(account1.movements);
 
-// const calcDisplaySummaryOut = function (movements) {
-//
-// };
+let currentAccount;
 
-// const calcInterest = function (movements) {
-//   const interest = movements.reduce((acc, mov) => acc + mov, 0);
-//   return Math.trunc(interest * 0.12);
-// };
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
 
-// labelSumOut.innerHTML = accountOut;
-// labelSumInterest.innerHTML = interestAccrued;
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+  }
+  displayMovements(currentAccount.movements);
+  calcDisplaySummary(currentAccount);
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
